@@ -1,0 +1,189 @@
+{
+  "$schema": "../../../schemas/model-routing.schema.json",
+  "version": "1.0.0",
+  "description": "Model routing configuration for research agents. Routes tasks to optimal models based on complexity and cost.",
+  "routing_rules": {
+    "micro-skills": {
+      "novelty-checker": {
+        "model": "sonnet",
+        "temperature": 0.2,
+        "reason": "Semantic comparison with literature. Requires nuanced understanding.",
+        "fallback": "opus"
+      },
+      "citation-verifier": {
+        "model": "haiku",
+        "temperature": 0.1,
+        "reason": "Factual lookup and verification. Deterministic.",
+        "fallback": "sonnet"
+      },
+      "cross-referencer": {
+        "model": "opus",
+        "temperature": 0.2,
+        "reason": "Holistic consistency check across entire paper. Highest stakes.",
+        "fallback": null
+      },
+      "proof-step-verifier": {
+        "model": "opus",
+        "temperature": 0.1,
+        "reason": "Mathematical verification requires deepest reasoning. Highest stakes per step.",
+        "fallback": null
+      },
+      "assumption-analyzer": {
+        "model": "sonnet",
+        "temperature": 0.2,
+        "reason": "Requires broad knowledge of standard assumptions. Balanced capability/cost.",
+        "fallback": "opus"
+      }
+    },
+    "orchestrators": {
+      "parallel-audit": {
+        "model": "opus",
+        "temperature": 0.1,
+        "reason": "Complex coordination of many subagents. Must plan optimally.",
+        "fallback": "sonnet"
+      },
+      "parallel-review": {
+        "model": "opus",
+        "temperature": 0.1,
+        "reason": "Full paper review coordination. High complexity.",
+        "fallback": "sonnet"
+      },
+      "state-generator": {
+        "model": "sonnet",
+        "temperature": 0.1,
+        "reason": "Comprehensive parsing. Balanced capability/cost.",
+        "fallback": "opus"
+      },
+      "parallel-theory-audit": {
+        "model": "opus",
+        "temperature": 0.1,
+        "reason": "Complex coordination of theory verification subagents. Must plan optimally.",
+        "fallback": "sonnet"
+      },
+      "proof-auditor": {
+        "model": "opus",
+        "temperature": 0.2,
+        "reason": "Deep mathematical reasoning for proof verification. Highest capability needed.",
+        "fallback": null
+      },
+      "notation-consistency-checker": {
+        "model": "sonnet",
+        "temperature": 0.1,
+        "reason": "Hybrid script+LLM. Script handles extraction, LLM handles semantics.",
+        "fallback": "opus"
+      },
+      "theorem-dependency-mapper": {
+        "model": "sonnet",
+        "temperature": 0.1,
+        "reason": "Hybrid script+LLM. Structured graph construction with semantic analysis.",
+        "fallback": "opus"
+      },
+      "counterexample-searcher": {
+        "model": "opus",
+        "temperature": 0.4,
+        "reason": "Constructing counterexamples requires creative mathematical reasoning.",
+        "fallback": null
+      }
+    },
+    "helpers": {}
+  },
+  "execution_modes": {
+    "parallel": {
+      "description": "Maximum parallelization for speed. Use for large papers with many claims.",
+      "max_concurrent_subagents": 5,
+      "timeout_per_task_seconds": 120,
+      "retry_on_failure": true,
+      "max_retries": 2,
+      "model_overrides": {}
+    },
+    "pipeline": {
+      "description": "Sequential stages with data passing. Use for thorough, methodical analysis.",
+      "stages": [
+        {
+          "name": "parse",
+          "skills": [
+            "state-generator"
+          ]
+        },
+        {
+          "name": "extract",
+          "skills": [],
+          "parallel_within_stage": true
+        },
+        {
+          "name": "classify",
+          "skills": [],
+          "parallel_within_stage": true
+        },
+        {
+          "name": "locate",
+          "skills": [],
+          "parallel_within_stage": true
+        },
+        {
+          "name": "grade",
+          "skills": [],
+          "parallel_within_stage": true
+        },
+        {
+          "name": "verify",
+          "skills": [
+            "novelty-checker",
+            "citation-verifier"
+          ],
+          "parallel_within_stage": true
+        },
+        {
+          "name": "synthesize",
+          "skills": [
+            "cross-referencer"
+          ],
+          "parallel_within_stage": false
+        }
+      ],
+      "checkpoint_after_each_stage": true
+    },
+    "eco": {
+      "description": "Budget-friendly execution. Downgrades models where possible.",
+      "max_concurrent_subagents": 3,
+      "timeout_per_task_seconds": 180,
+      "model_overrides": {
+        "novelty-checker": "haiku",
+        "parallel-audit": "sonnet"
+      },
+      "skip_optional_checks": true
+    },
+    "thorough": {
+      "description": "Maximum quality. Upgrades models and adds extra verification.",
+      "max_concurrent_subagents": 3,
+      "timeout_per_task_seconds": 300,
+      "model_overrides": {
+        "novelty-checker": "opus"
+      },
+      "extra_verification_passes": 1
+    }
+  },
+  "cost_estimates": {
+    "haiku": {
+      "input_per_1k": 0.00025,
+      "output_per_1k": 0.00125,
+      "typical_task_cost": 0.01
+    },
+    "sonnet": {
+      "input_per_1k": 0.003,
+      "output_per_1k": 0.015,
+      "typical_task_cost": 0.05
+    },
+    "opus": {
+      "input_per_1k": 0.015,
+      "output_per_1k": 0.075,
+      "typical_task_cost": 0.15
+    }
+  },
+  "mode_cost_multipliers": {
+    "parallel": 1.0,
+    "pipeline": 1.1,
+    "eco": 0.4,
+    "thorough": 2.5
+  }
+}

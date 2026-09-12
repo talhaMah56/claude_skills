@@ -1,0 +1,256 @@
+/* @theme notebook-status */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --paper: #f8f4e8;
+  --ink: #1d2330;
+  --ink-soft: #4a556f;
+  --line: rgba(29, 35, 48, 0.16);
+  --card-bg: rgba(255, 255, 255, 0.86);
+  --a: #e4572e;
+  --b: #0c7c99;
+  --c: #588157;
+  --d: #f4a259;
+}
+
+section {
+  font-family: 'Manrope', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 18% 12%, rgba(12, 124, 153, 0.10), transparent 36%),
+    radial-gradient(circle at 85% 10%, rgba(228, 87, 46, 0.10), transparent 32%),
+    linear-gradient(180deg, #fbf7ee 0%, #f5ecd9 58%, #f1e5cf 100%);
+  padding: 40px 36px 50px 36px;
+  font-size: 24px;
+  line-height: 1.28;
+  position: relative;
+}
+
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(90deg, var(--a), var(--b), var(--c), var(--d));
+}
+
+section::after {
+  content: '';
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  top: -110px;
+  right: -85px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(244, 162, 89, 0.25), rgba(244, 162, 89, 0));
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Fraunces', serif;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.08;
+}
+
+h1 {
+  font-size: 2.05em;
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+
+h2 {
+  font-size: 1.38em;
+  margin-top: 24px;
+  margin-bottom: 20px;
+}
+
+.lead .chip {
+  font-size: 0.68em;
+  padding: 5px 10px;
+}
+
+h3 {
+  font-size: 1.02em;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+p,
+li,
+table {
+  color: var(--ink-soft);
+  font-size: 0.82em;
+}
+
+figcaption {
+  color: var(--ink-soft);
+  font-size: 0.7em;
+}
+
+ul {
+  margin: 8px 0 8px 14px;
+  padding: 0;
+}
+
+li {
+  margin: 6px 0;
+}
+
+small {
+  font-size: 0.6em;
+  color: #586179;
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.lead h1 {
+  margin-top: 12px;
+}
+
+.lead .chips {
+  justify-content: center;
+}
+
+
+.cols-2,
+.cols-3,
+.cols-4 {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.cols-2 > .figure-card:only-child,
+.cols-3 > .figure-card:only-child,
+.cols-4 > .figure-card:only-child {
+  grid-column: 1 / -1;
+}
+
+.figure-card {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.figure-card img {
+  display: block;
+  width: 100%;
+  height: 245px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.cols-2 > .figure-card:only-child img { height: 300px; }
+.cols-3 .figure-card img { height: 195px; }
+.cols-4 .figure-card img { height: 175px; }
+
+.figure-card figcaption {
+  margin-top: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 4px;
+  font-size: 0.58em;
+  line-height: 1.28;
+  text-align: center;
+  color: #5f6881;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.figure-card figcaption code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.table-box {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.table-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-box th,
+.table-box td {
+  border-bottom: 1px solid rgba(29, 35, 48, 0.12);
+  padding: 6px 5px;
+  text-align: left;
+  font-size: 0.58em;
+}
+
+.table-box th {
+  color: #22324a;
+  background: rgba(12, 124, 153, 0.09);
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.chip {
+  border: 1px solid rgba(29, 35, 48, 0.18);
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 0.52em;
+  color: #364155;
+  font-weight: 700;
+}
+
+code {
+  font-size: 0.64em;
+  background: rgba(12, 124, 153, 0.10);
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: #264d62;
+}
+
+strong {
+  color: #273248;
+}
+
+/* Keep content compact on print/export */
+@media print {
+  section {
+    font-size: 22px;
+    padding: 36px 34px 46px 34px;
+  }
+  .figure-card img {
+    height: 210px;
+  }
+  .cols-2 > .figure-card:only-child img { height: 255px; }
+  .cols-3 .figure-card img { height: 170px; }
+  .cols-4 .figure-card img { height: 155px; }
+}

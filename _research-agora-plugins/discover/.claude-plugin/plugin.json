@@ -1,0 +1,32 @@
+{
+  "name": "discover",
+  "version": "1.0.0",
+  "description": "Decide what to do: checkpoint-gated brainstorming, personalized onboarding, and a navigator that routes you to the right skill.",
+  "author": {
+    "name": "rpatrik96",
+    "email": "prmedia17@gmail.com"
+  },
+  "homepage": "https://github.com/rpatrik96/research-agora",
+  "repository": "https://github.com/rpatrik96/research-agora",
+  "license": "MIT",
+  "keywords": [
+    "brainstorming",
+    "discovery",
+    "navigation",
+    "onboarding"
+  ],
+  "components": {
+    "commands": {
+      "items": [
+        "brainstorm",
+        "navigator",
+        "onboard"
+      ]
+    },
+    "micro-skills": {
+      "items": [
+        "novelty-checker"
+      ]
+    }
+  }
+}
