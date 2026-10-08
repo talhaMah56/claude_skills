@@ -4,7 +4,7 @@
 
 Written so you can trace any skill back to its origin without re-reading the whole process that produced this collection.
 
-**Final counts: 145 skills in one flat directory, plus four support dirs (`shared-references/`, `tools/`, `mcp-servers/`, `_research-agora-plugins/`).** The `relevant/` + `other/` split described below was a sorting device used during the work; it was collapsed into one flat directory at the end (§8b) — that flat directory is what this repository now is. See [README.md](README.md) for install and usage.
+**Current layout (since 2026-10-07, §10): 27 skills in `essential/` (installed), 118 in `not-essential/` (kept for reference), plus support dirs `essential/shared-references/`, `tools/`, `mcp-servers/` and `_research-agora-plugins/`.** Sections §1–§9 describe the earlier work that produced the 145, when they sat in one flat directory. Paths there like `skills/relevant/<skill>/` are historical. See [README.md](README.md) for install and usage.
 
 ---
 
@@ -312,3 +312,48 @@ The first version of this changelog was written from memory of the work and cont
 Corrections applied here include: the headline count (93 → 92 skills, since `shared-references/` is not a skill); `shared-references` file count (28 → 31); how many skills depend on it ("nearly all 82" → 57); the prune breakdown (was arithmetically impossible at 326+3+130=459, actually 250+160+3=413); a garbled "96 → 96" line; the merge net-effect arithmetic that silently netted a §4 addition against §3 deletions; the `systematic-debugging` characterization (near-identical, not "fuller vs. thinner", and it dropped 10 companion files); the unverified "byte-identical" claim (since actually verified); and the conversion count (43 → 40 converted + 3 that had nothing to convert).
 
 Three real bugs were also found and **fixed** during the audit, not merely documented: the dangling `shared-references/` pointers to deleted skills (§3.2), the duplicate `name: handoff` collision (§6), and the four folder/frontmatter name mismatches (§6).
+
+---
+
+## 10. Essential vs not-essential (2026-10-07)
+
+The user asked for the collection to be cut down to "only the most essential skills… a balance". The result is 27 skills in `essential/` and 118 in `not-essential/`. All moves used `git mv`, so `git log --follow` traces any skill back. [`not-essential/README.md`](not-essential/README.md) gives a one-line reason for every skill not kept.
+
+### How the set was chosen
+
+1. **Value pass over all 145.** The skills were grouped into 14 families so that overlapping skills were judged side by side. Each family went through four roles:
+   - an assessor, who read every SKILL.md in full and checked blockers against this machine;
+   - a prosecutor, who argued the "useful" verdicts down;
+   - a defender, who argued the "no-value" verdicts up;
+   - a judge, who re-read the skills and ruled on any challenge rated medium or strong.
+
+   Result: 71 useful and 74 no-value. The judges flipped `paper-talk` and `update-changelog` to no-value and `research-pipeline` to useful. This pass was paused partway through, so four judging steps never ran. Their open challenges were folded into step 2: the four no-value skills a defender had challenged went into the candidate pool.
+2. **Essential selection over the 75 candidates.**
+   - Three independent curators each picked about 30, using different lenses: lifecycle coverage, how often each skill would be used versus the context it costs, and how much it prevents costly mistakes.
+   - 27 picks were unanimous and 6 were contested.
+   - A synthesizer settled the contested picks and checked dependencies.
+   - A gap critic and a bloat critic proposed 5 changes. A final arbiter verified each against the files and accepted 4:
+     - `slurm-jobs` was swapped for `experiment-queue`, because no SLURM use was found in the user's projects and training runs on a shared GPU server;
+     - `results-to-slides`, `figure-spec` and `test-driven-development` were removed.
+
+   Removing `web-debug-search` was rejected.
+3. **Dependency closure.** Every slash-invocation of a cut skill inside the 27 was read in context. All of them are "see also" pointers, opt-in branches, or explicitly non-blocking:
+   - `rebuttal`'s `AUTO_EXPERIMENT` defaults to false;
+   - `idea-creator`'s GPU pilot phase is skippable;
+   - the `render-html` calls are marked non-blocking;
+   - `paper-plan` extracts claims itself when `CLAIMS_FROM_RESULTS.md` is absent.
+
+   `check_split.py` also confirmed that every `../shared-references/*.md` target resolves from `essential/`, and that there are no duplicate frontmatter names.
+
+### Layout decisions
+
+- `shared-references/` moved into `essential/`. 165 references use `../shared-references/…` relative to the skill folder, and this way one `cp -r ./essential/*/ ~/.claude/skills/` installs it alongside the skills. A skill moved back from `not-essential/` resolves it again.
+- `tools/` stays at the repo root, because skills resolve it as `$ARIS_REPO/tools/` through `~/.aris/repo`, which points at the repo root. `training-check`'s `../../tools/watchdog.py` link now resolves too, from either folder.
+- `mcp-servers/` and `_research-agora-plugins/` are not skills and stay at the root.
+
+### Corrections to earlier sections
+
+- The catalog used for this pass assumed SLURM access because `slurm-jobs` had been written for this collection (§8b). The arbiter found no SLURM use in the user's projects. `slurm-jobs` is still a good skill, kept in `not-essential/` to re-add with cluster access.
+- §7 marks `run-experiment`, `monitor-experiment` and `experiment-bridge` as usable apart from their remote-compute paths. All three were cut anyway: `experiment-queue` covers batch runs on a shared server, and Claude launches single runs directly.
+- `figure-spec` and `mermaid-diagram`, recommended as diagram defaults in the earlier README, need `rsvg-convert`/`cairosvg` and Node respectively to render. Neither is installed on this machine.
+- `~/.aris/repo` on this machine pointed at a deleted path (`d:/Developer/claude-skills/skills`) and was UTF-16-encoded by PowerShell's `echo >`. The README now gives encoding-safe commands.
